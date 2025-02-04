@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Operator` (
 CREATE TABLE IF NOT EXISTS `mydb`.`Pass` (
   `idPass` INT NOT NULL,
   `idToll` INT NOT NULL,
+  `idTag` INT NOT NULL,
   `idOperator` INT NOT NULL,
   `Charge` DECIMAL NOT NULL,
   `timestamp` TIMESTAMP NOT NULL,

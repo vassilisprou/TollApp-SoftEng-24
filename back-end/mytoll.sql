@@ -1,22 +1,19 @@
-DROP SCHEMA IF EXISTS cooking_show;
-DROP USER IF EXISTS 'cook'@'localhost';
-DROP USER IF EXISTS 'admin'@'localhost';
-CREATE SCHEMA cooking_show;
-USE cooking_show;
-
+DROP SCHEMA IF EXISTS mydb;
+CREATE SCHEMA mydb;
+USE mydb;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Operator` (
-  `idOperator` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR (100) NOT NULL UNIQUE, 
+  `idOperator` VARCHAR (45)   NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR (45) NOT NULL UNIQUE, 
   PRIMARY KEY (`idOperator`));
 
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Pass` (
-  `idPass` INT NOT NULL,
-  `idToll` INT NOT NULL,
-  `idTag` INT NOT NULL,
-  `idOperator` INT NOT NULL,
-  `Charge` DECIMAL NOT NULL,
+  `idPass` VARCHAR (45)  NOT NULL,
+  `idToll` VARCHAR (45)   NOT NULL,
+  `idTag` VARCHAR (45)   NOT NULL,
+  `idOperator` VARCHAR (45)   NOT NULL,
+  `Charge` FLOAT NOT NULL,
   `timestamp` TIMESTAMP NOT NULL,
   PRIMARY KEY (`idPass`),
   FOREIGN KEY (`idToll`) REFERENCES `mydb`.`Toll` (`idToll`),
@@ -25,9 +22,9 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Pass` (
 
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Settlement` (
-  `idSettlement` INT NOT NULL,
-  `Paying_Operator` INT NOT NULL,
-  `Paid_Operator` INT NOT NULL,
+  `idSettlement` VARCHAR (45)   NOT NULL,
+  `Paying_Operator` VARCHAR (45)   NOT NULL,
+  `Paid_Operator` VARCHAR (45)   NOT NULL,
   `timestamp` TIMESTAMP NOT NULL,
   PRIMARY KEY (`idSettlement`),
   FOREIGN KEY (`Paying_Operator`) REFERENCES `mydb`.`Operator` (`idOperator`),
@@ -35,8 +32,8 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Settlement` (
 
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Toll` (
-  `idToll` INT NOT NULL,
-  `idOperator` INT NOT NULL,
+  `idToll` VARCHAR (45)   NOT NULL,
+  `idOperator` VARCHAR (45)   NOT NULL,
   `Name` VARCHAR(45) NOT NULL,
   `Locality` VARCHAR(45) NOT NULL,
   `Longitude` INT NOT NULL,
@@ -54,14 +51,45 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Toll` (
 
 
 CREATE TABLE IF NOT EXISTS `mydb`.`User` (
-  `idUser` INT NOT NULL,
+  `idUser` VARCHAR (45)   NOT NULL,
   `Username` VARCHAR(45) NOT NULL,
   `Type` VARCHAR(45) NOT NULL);
 
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Tag` (
-  `idTag` INT NOT NULL,
-  `idOperator` INT NOT NULL,
-  `Type` INT NOT NULL,
+  `idTag` VARCHAR (45)   NOT NULL,
+  `idOperator` VARCHAR (45)   NOT NULL,
+  `Type` VARCHAR (45)   NOT NULL,
   PRIMARY KEY (`idTag`),
   FOREIGN KEY (`idOperator`) REFERENCES `mydb`.`Operator` (`idOperator`));
+
+SET FOREIGN_KEY_CHECKS = 0;
+
+INSERT INTO Operator (idOperator, name)
+SELECT DISTINCT OpID, Operator
+FROM tollstations2024;
+
+LOAD DATA INFILE 'C:\Users\IV\Downloads\tollstations2024.csv'
+INTO TABLE Toll
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(TollID, OpID, Name, Locality, Longitude, Latitude, Email, PM, Price_1, Price_2, Price_3, Price_4, Road);
+
+INSERT INTO Tag (idTag, idOperator, Type)
+SELECT DISTINCT idTag, OpID, 1  -- Assuming '1' as default Type
+FROM passes-sample;
+
+LOAD DATA INFILE 'C:\Users\IV\Downloads\passes-sample.csv'
+INTO TABLE Pass
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(idPass, idToll, idTag, idOperator, Charge, timestamp);
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+SELECT * FROM Toll LIMIT 10;
+SELECT * FROM Pass LIMIT 10;

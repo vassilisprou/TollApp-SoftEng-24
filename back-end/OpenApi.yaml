@@ -1,0 +1,271 @@
+openapi: 3.0.0
+info:
+  title: Toll API
+  description: API for managing toll stations, passes, and authentication.
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:9115
+    description: Local development server
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-OBSERVATORY-AUTH
+
+paths:
+  /login:
+    post:
+      summary: Authenticate user and return a token
+      description: Logs in the user and returns an authentication token.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: admin
+                password:
+                  type: string
+                  example: freepasses4all
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "token_admin"
+        "400":
+          description: Missing username or password
+        "401":
+          description: Invalid credentials
+
+  /logout:
+    post:
+      summary: Logout user and invalidate token
+      security:
+        - apiKeyAuth: []
+      responses:
+        "200":
+          description: Successfully logged out
+        "401":
+          description: Invalid session
+
+  /admin/healthcheck:
+    get:
+      summary: Check database connection and station count
+      security:
+        - apiKeyAuth: []
+      responses:
+        "200":
+          description: API is healthy, DB connected
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "OK"
+                  dbconnection:
+                    type: string
+                    example: "active"
+                  n_stations:
+                    type: integer
+                    example: 10
+                  n_tags:
+                    type: integer
+                    example: 50
+                  n_passes:
+                    type: integer
+                    example: 1000
+        "401":
+          description: Unauthorized access
+        "500":
+          description: Internal server error
+
+  /admin/resetstations:
+    post:
+      summary: Reset all toll stations
+      security:
+        - apiKeyAuth: []
+      responses:
+        "200":
+          description: Reset successful
+        "500":
+          description: Internal server error
+
+  /admin/resetpasses:
+    post:
+      summary: Reset all pass records
+      security:
+        - apiKeyAuth: []
+      responses:
+        "200":
+          description: Reset successful
+        "500":
+          description: Internal server error
+
+  /admin/addpasses:
+    post:
+      summary: Upload passes from CSV
+      security:
+        - apiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: Passes added successfully
+        "400":
+          description: Invalid file format
+        "500":
+          description: Internal server error
+
+  /tollStationPasses/{tollStationID}/{date_from}/{date_to}:
+    get:
+      summary: Get toll station passes
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - name: tollStationID
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: date_from
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: date_to
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: Pass data retrieved
+        "204":
+          description: No data found
+        "500":
+          description: Internal server error
+
+  /passAnalysis/{stationOpID}/{tagOpID}/{date_from}/{date_to}:
+    get:
+      summary: Get pass analysis
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - name: stationOpID
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tagOpID
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: date_from
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: date_to
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: Analysis retrieved
+        "204":
+          description: No data found
+        "500":
+          description: Internal server error
+
+  /passesCost/{tollOpID}/{tagOpID}/{date_from}/{date_to}:
+    get:
+      summary: Get passes cost
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - name: tollOpID
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tagOpID
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: date_from
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: date_to
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: Cost retrieved
+        "204":
+          description: No data found
+        "500":
+          description: Internal server error
+
+  /chargesBy/{tollOpID}/{date_from}/{date_to}:
+    get:
+      summary: Get charges by operator
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - name: tollOpID
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: date_from
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: date_to
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: Charges retrieved
+        "204":
+          description: No data found
+        "500":
+          description: Internal server error

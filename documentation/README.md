@@ -1,6 +1,6 @@
 # Documentation
 
-Ενδεικτικά περιεχόμενα:
+Περιεχόμενα:
 
 - Διαγράμματα UML Activity (in ONE vpp file).
 - Διαγράμματα UML Class (in ONE vpp file).

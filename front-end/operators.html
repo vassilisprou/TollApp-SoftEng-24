@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operator Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f9f9f9;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 10px 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            background-color: #f44336;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            background-color: #e53935;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Operator Toll Passes Data</h1>
+
+        <!-- Input field to enter Operator ID -->
+        <label for="operatorID">Enter Operator ID:</label>
+        <input type="text" id="operatorID" placeholder="Operator ID">
+        <button onclick="fetchOperatorData()">Get Data</button>
+
+        <div id="error-message" class="error-message"></div>
+
+        <!-- Table for displaying operator pass count -->
+        <h2>Operator Passes Summary</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Operator ID</th>
+                    <th>Total Passes</th>
+                </tr>
+            </thead>
+            <tbody id="operatorTableBody">
+                <!-- Operator pass count data will be inserted here dynamically -->
+            </tbody>
+        </table>
+
+        <!-- Back button to return to the previous page -->
+        <a href="previousPage.html" class="btn">Back</a>
+    </div>
+
+    <script>
+        async function fetchOperatorData() {
+            const operatorID = document.getElementById("operatorID").value.trim();
+            const errorMessage = document.getElementById("error-message");
+            errorMessage.textContent = "";
+
+            if (!operatorID) {
+                errorMessage.textContent = "Please enter an Operator ID.";
+                return;
+            }
+
+            const url = `https://127.0.0.1:9115/operatorPassesCount/${operatorID}`;
+            const token = localStorage.getItem("token");
+
+            try {
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-OBSERVATORY-AUTH": token
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const tableBody = document.getElementById("operatorTableBody");
+                tableBody.innerHTML = ''; // Clear previous data
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${data.operatorID}</td>
+                    <td>${data.totalPasses}</td>
+                `;
+                tableBody.appendChild(row);
+
+            } catch (error) {
+                console.error("Error fetching operator data:", error);
+                errorMessage.textContent = "Error fetching data. Please check the console.";
+            }
+        }
+    </script>
+
+</body>
+</html>

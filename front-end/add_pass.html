@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Pass</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 350px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+        .success-message {
+            color: green;
+            margin-top: 10px;
+        }
+        table {
+            width: 80%;
+            margin-top: 30px;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Upload Passes (CSV)</h2>
+        <form id="upload-form">
+            <input type="file" id="fileInput" accept=".csv" required>
+            <button type="button" onclick="uploadFile()">Upload Passes</button>
+        </form>
+        <div id="error-message" class="error-message"></div>
+        <div id="success-message" class="success-message"></div>
+    </div>
+
+    <h2>Passes</h2>
+    <table id="passes-table">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Toll ID</th>
+                <th>Tag ID</th>
+                <th>Tag Home ID</th>
+                <th>Charge (€)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be populated here -->
+        </tbody>
+    </table>
+
+    <script>
+        // Function to fetch passes from the API and populate the table
+        function loadPasses() {
+            fetch("https://127.0.0.1:9115/admin/get_passes")
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById("passes-table").getElementsByTagName("tbody")[0];
+                    tableBody.innerHTML = ''; // Clear existing table data
+
+                    // Populate the table with fetched data
+                    data.forEach(pass => {
+                        const row = tableBody.insertRow();
+                        row.insertCell(0).textContent = pass.timestamp;
+                        row.insertCell(1).textContent = pass.tollID;
+                        row.insertCell(2).textContent = pass.tagRef;
+                        row.insertCell(3).textContent = pass.tagHomeID;
+                        row.insertCell(4).textContent = pass.charge.toFixed(2) + " €";
+                    });
+                })
+                .catch(error => {
+                    console.error("Error fetching passes:", error);
+                });
+        }
+
+        // Function to handle file upload
+        function uploadFile() {
+            const fileInput = document.getElementById("fileInput");
+            const errorMessage = document.getElementById("error-message");
+            const successMessage = document.getElementById("success-message");
+            errorMessage.textContent = "";
+            successMessage.textContent = "";
+
+            if (fileInput.files.length === 0) {
+                errorMessage.textContent = "Please select a CSV file.";
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append("file", file);
+
+            fetch("https://127.0.0.1:9115/admin/addpasses", {
+                method: "POST",
+                headers: {
+                    "X-OBSERVATORY-AUTH": localStorage.getItem("token") // ✅ Include authentication token
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "OK") {
+                    successMessage.textContent = "CSV uploaded successfully!";
+                    fileInput.value = ""; // Reset file input
+                    loadPasses(); // Refresh the table after adding new passes
+                } else {
+                    errorMessage.textContent = "Error uploading CSV: " + data.info;
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                errorMessage.textContent = "There was an error. Please try again.";
+            });
+        }
+
+        // Load passes when page loads
+        window.onload = loadPasses;
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choice Screen</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .choice-container {
+            margin-top: 50px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            background-color: #4CAF50;
+            color: white;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="choice-container">
+        <h2>Welcome to the Choice Screen</h2>
+        <p>Select a report to view:</p>
+        
+        <button onclick="goToTollReport()">View Toll Report</button>
+        <button onclick="goToOperators()">View Operators</button>
+        <button onclick="goToOperatorDebt()">View Debts</button>
+        <button onclick="goToNewEntry()">New Entry</button>
+        
+        <div id="error-message" class="error-message"></div>
+    </div>
+
+    <script>
+        // Function to redirect to the toll report page
+        function goToTollReport() {
+            window.location.href = "toll_report.html"; // Redirect to toll report page
+        }
+
+    
+        // Function to redirect to the operators page
+        function goToOperators() {
+            window.location.href = "operators.html"; // Redirect to operators page
+        }
+
+        // Function to redirect to the operator debt page
+        function goToOperatorDebt() {
+            window.location.href = "operator_debt.html"; // Redirect to operator debt page
+        }
+
+        // Function to redirect to the add pass page (New Entry)
+        function goToNewEntry() {
+            window.location.href = "add_pass.html"; // Redirect to add pass page
+        }
+    </script>
+
+</body>
+</html>

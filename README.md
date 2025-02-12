@@ -1,20 +1,27 @@
-# SoftEng 2024, Team 23
+# SoftEng 2024 - Team 23
 
-Project Overview
+## Toll Management App - SoftEng 2024 Project
 
-This repository contains a Toll Management App for interoperability in automated crossing systems, developed as part of the SoftEng 2024 project. It is useful for managing toll stations, pass transactions, and analyzing toll operator interactions.
+### Project Overview
+This repository hosts the Toll Management App, a system designed for interoperability in automated toll crossing operations. Developed as part of the SoftEng 2024 project, this application facilitates:
+- Efficient management of toll stations
+- Tracking and processing of pass transactions
+- In-depth analysis of toll operator interactions
 
-We used:
+### Technologies Used
+We utilized a combination of tools and frameworks to build this system:
 
-visual paradigm for the uml diagrams 
-python for implementing the api and cli
-mysql for the database
-postman collections for automated api testing
-openapi yaml for documanting the api
-______ for the frontend
+- Visual Paradigm – UML diagrams and system modeling
+- Python – API and CLI implementation
+- MySQL – Database management
+- Postman Collections – Automated API testing
+- OpenAPI (YAML) – API documentation
+- ______ – Frontend development (to be specified)
 
-Contributors:
-Χρηστος Αλεξιου
-Ηλιας Αριστειδης Βουγιουκας
-Ιωαννα-Μελιτινη Μακαρη
-Βασιλειος Προυσαλιδης
+### Contributors
+- Χρήστος Αλεξίου
+- Ηλίας Αριστείδης Βουγιούκας
+- Ιωάννα-Μελιτίνη Μακαρή
+- Βασίλειος Προυσαλίδης
+
+This project provides a structured approach to toll management, ensuring automation, efficiency, and seamless toll station interoperability.

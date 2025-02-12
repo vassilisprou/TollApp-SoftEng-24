@@ -1,6 +1,6 @@
 # CLI client
 
-Ενδεικτικά περιεχόμενα:
+Περιεχόμενα:
 
 - Command line interface (CLI).
 - CLI functional tests.

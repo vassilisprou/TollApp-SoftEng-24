@@ -12,7 +12,7 @@ This repository hosts the Toll Management App, a system designed for interoperab
 We utilized a combination of tools and frameworks to build this system:
 
 - Visual Paradigm – UML diagrams and system modeling
-- Python – API and CLI implementation
+- Python with Flask – API and CLI implementation
 - MySQL – Database management
 - Postman Collections – Automated API testing
 - OpenAPI (YAML) – API documentation

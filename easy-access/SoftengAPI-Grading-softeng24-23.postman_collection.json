@@ -1,0 +1,3861 @@
+{
+    "info": {
+        "_postman_id": "28e39c92-aed9-4b1d-82b3-761af204be7f",
+        "name": "Softeng API Grading softeng24-23",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "_exporter_id": "26965286"
+    },
+    "item": [
+        {
+            "name": "Login",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Save response body to a variable\", function () {",
+                            "    var responseBody = pm.response.json();",
+                            "    console.log(responseBody)",
+                            "    pm.collectionVariables.set(\"jwt-sgs\", responseBody.token);",
+                            "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"username\": {{username}},\n    \"password\": {{password}}\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "{{softeng-grading-service}}/login",
+                    "host": [
+                        "{{softeng-grading-service}}"
+                    ],
+                    "path": [
+                        "login"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 admin-01",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/logout",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "logout"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "se24-23 admin-02",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Save response body to a variable\", function () {",
+                            "    var responseBody = pm.response.json();",
+                            "    console.log(responseBody);",
+                            "    var jwt = responseBody.token || responseBody.jwt || responseBody['jwt-token'] || responseBody.jwtToken;",
+                            "    pm.collectionVariables.set(\"jwt\", jwt);",
+                            "});",
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/x-www-form-urlencoded",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "urlencoded",
+                    "urlencoded": [
+                        {
+                            "key": "username",
+                            "value": "{{your-api-username}}",
+                            "type": "text"
+                        },
+                        {
+                            "key": "password",
+                            "value": "{{your-api-password}}",
+                            "type": "text"
+                        }
+                    ]
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/login",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "login"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "se24-23 admin-03",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//admin/healthcheck",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "admin",
+                        "healthcheck"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 admin-04",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//admin/resetpasses",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "admin",
+                        "resetpasses"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 admin-05",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//admin/healthcheck",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "admin",
+                        "healthcheck"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 admin-06",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//admin/resetstations",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "admin",
+                        "resetstations"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 admin-07",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//admin/healthcheck",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "admin",
+                        "healthcheck"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 admin-08",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//admin/addpasses",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "admin",
+                        "addpasses"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 admin-09",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//admin/healthcheck",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "admin",
+                        "healthcheck"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 tollStationPasses-01",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//tollStationPasses/AM08/20220713/20220727",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "tollStationPasses",
+                        "AM08",
+                        "20220713",
+                        "20220727"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 tollStationPasses-02",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//tollStationPasses/NAO04/20220713/20220727",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "tollStationPasses",
+                        "NAO04",
+                        "20220713",
+                        "20220727"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 tollStationPasses-03",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//tollStationPasses/NO01/20220713/20220727",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "tollStationPasses",
+                        "NO01",
+                        "20220713",
+                        "20220727"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 tollStationPasses-04",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//tollStationPasses/OO03/20220713/20220727",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "tollStationPasses",
+                        "OO03",
+                        "20220713",
+                        "20220727"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 tollStationPasses-05",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//tollStationPasses/XXX/20220713/20220727",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "tollStationPasses",
+                        "XXX",
+                        "20220713",
+                        "20220727"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 tollStationPasses-06",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//tollStationPasses/OO03/20220713/20220727",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "tollStationPasses",
+                        "OO03",
+                        "20220713",
+                        "20220727"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 tollStationPasses-07",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//error/OO03/20220713/20220727",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "error",
+                        "OO03",
+                        "20220713",
+                        "20220727"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 tollStationPasses-08",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//tollStationPasses/AM08/20220714/20220725",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "tollStationPasses",
+                        "AM08",
+                        "20220714",
+                        "20220725"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 tollStationPasses-09",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//tollStationPasses/NAO04/20220714/20220725",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "tollStationPasses",
+                        "NAO04",
+                        "20220714",
+                        "20220725"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 tollStationPasses-10",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//tollStationPasses/NO01/20220714/20220725",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "tollStationPasses",
+                        "NO01",
+                        "20220714",
+                        "20220725"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 tollStationPasses-11",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//tollStationPasses/OO03/20220714/20220725",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "tollStationPasses",
+                        "OO03",
+                        "20220714",
+                        "20220725"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 tollStationPasses-12",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//tollStationPasses/XXX/20220714/20220725",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "tollStationPasses",
+                        "XXX",
+                        "20220714",
+                        "20220725"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 tollStationPasses-13",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//tollStationPasses/OO03/20220714/20220725",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "tollStationPasses",
+                        "OO03",
+                        "20220714",
+                        "20220725"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 passAnalysis-01",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//passAnalysis/AM/NAO/20220713/20220727",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "passAnalysis",
+                        "AM",
+                        "NAO",
+                        "20220713",
+                        "20220727"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 passAnalysis-02",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//passAnalysis/NAO/AM/20220713/20220727",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "passAnalysis",
+                        "NAO",
+                        "AM",
+                        "20220713",
+                        "20220727"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 passAnalysis-03",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//passAnalysis/NO/OO/20220713/20220727",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "passAnalysis",
+                        "NO",
+                        "OO",
+                        "20220713",
+                        "20220727"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 passAnalysis-04",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//passAnalysis/OO/KO/20220713/20220727",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "passAnalysis",
+                        "OO",
+                        "KO",
+                        "20220713",
+                        "20220727"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 passAnalysis-05",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//passAnalysis/XXX/KO/20220713/20220727",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "passAnalysis",
+                        "XXX",
+                        "KO",
+                        "20220713",
+                        "20220727"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 passAnalysis-06",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//passAnalysis/AM/NAO/20220714/20220725",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "passAnalysis",
+                        "AM",
+                        "NAO",
+                        "20220714",
+                        "20220725"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 passAnalysis-07",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//passAnalysis/NAO/AM/20220714/20220725",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "passAnalysis",
+                        "NAO",
+                        "AM",
+                        "20220714",
+                        "20220725"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 passAnalysis-08",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//passAnalysis/NO/OO/20220714/20220725",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "passAnalysis",
+                        "NO",
+                        "OO",
+                        "20220714",
+                        "20220725"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 passAnalysis-09",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//passAnalysis/OO/KO/20220714/20220725",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "passAnalysis",
+                        "OO",
+                        "KO",
+                        "20220714",
+                        "20220725"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 passAnalysis-10",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//passAnalysis/XXX/KO/20220714/20220725",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "passAnalysis",
+                        "XXX",
+                        "KO",
+                        "20220714",
+                        "20220725"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 passesCost-01",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//passesCost/AM/NAO/20220713/20220727",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "passesCost",
+                        "AM",
+                        "NAO",
+                        "20220713",
+                        "20220727"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 passesCost-02",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//passesCost/NAO/AM/20220713/20220727",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "passesCost",
+                        "NAO",
+                        "AM",
+                        "20220713",
+                        "20220727"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 passesCost-03",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//passesCost/NO/OO/20220713/20220727",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "passesCost",
+                        "NO",
+                        "OO",
+                        "20220713",
+                        "20220727"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 passesCost-04",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//passesCost/OO/KO/20220713/20220727",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "passesCost",
+                        "OO",
+                        "KO",
+                        "20220713",
+                        "20220727"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 passesCost-05",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//passesCost/XXX/KO/20220713/20220727",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "passesCost",
+                        "XXX",
+                        "KO",
+                        "20220713",
+                        "20220727"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 passesCost-06",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//passesCost/AM/NAO/20220714/20220725",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "passesCost",
+                        "AM",
+                        "NAO",
+                        "20220714",
+                        "20220725"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 passesCost-07",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//passesCost/NAO/AM/20220714/20220725",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "passesCost",
+                        "NAO",
+                        "AM",
+                        "20220714",
+                        "20220725"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 passesCost-08",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//passesCost/NO/OO/20220714/20220725",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "passesCost",
+                        "NO",
+                        "OO",
+                        "20220714",
+                        "20220725"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 passesCost-09",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//passesCost/OO/KO/20220714/20220725",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "passesCost",
+                        "OO",
+                        "KO",
+                        "20220714",
+                        "20220725"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 passesCost-10",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//passesCost/XXX/KO/20220714/20220725",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "passesCost",
+                        "XXX",
+                        "KO",
+                        "20220714",
+                        "20220725"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 chargesBy-01",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//chargesBy/NAO/20220713/20220727",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "chargesBy",
+                        "NAO",
+                        "20220713",
+                        "20220727"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 chargesBy-02",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//chargesBy/GE/20220713/20220727",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "chargesBy",
+                        "GE",
+                        "20220713",
+                        "20220727"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 chargesBy-03",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//chargesBy/OO/20220713/20220727",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "chargesBy",
+                        "OO",
+                        "20220713",
+                        "20220727"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 chargesBy-04",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//chargesBy/KO/20220713/20220727",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "chargesBy",
+                        "KO",
+                        "20220713",
+                        "20220727"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 chargesBy-05",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//chargesBy/NO/20220713/20220727",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "chargesBy",
+                        "NO",
+                        "20220713",
+                        "20220727"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 chargesBy-06",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//chargesBy/NAO/20220714/20220725",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "chargesBy",
+                        "NAO",
+                        "20220714",
+                        "20220725"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 chargesBy-07",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//chargesBy/GE/20220714/20220725",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "chargesBy",
+                        "GE",
+                        "20220714",
+                        "20220725"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 chargesBy-08",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//chargesBy/OO/20220714/20220725",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "chargesBy",
+                        "OO",
+                        "20220714",
+                        "20220725"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 chargesBy-09",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//chargesBy/KO/20220714/20220725",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "chargesBy",
+                        "KO",
+                        "20220714",
+                        "20220725"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "se24-23 chargesBy-10",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(`[Softeng Grading Service]: Sending response from ${pm.request.url.path.join(\"/\")}`, function () {",
+                            "        var jsonData = pm.response.json();  // API Response",
+                            "",
+                            "        var requestPath = pm.request.url.path.join(\"/\");",
+                            "",
+                            "        var storagePayload = {",
+                            "            \"response\": {}",
+                            "        };",
+                            "        storagePayload[\"response\"][requestPath] = {",
+                            "            payload: jsonData,",
+                            "            status: pm.response.code,",
+                            "        };",
+                            "",
+                            "        pm.sendRequest({",
+                            "            url: pm.collectionVariables.get(\"softeng-grading-service\") + \"/data\",",
+                            "            method: \"POST\",",
+                            "            header: {",
+                            "                \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"jwt-sgs\"),",
+                            "                \"Content-Type\": \"application/json\"",
+                            "            },",
+                            "            body: {",
+                            "                mode: \"raw\",",
+                            "                raw: JSON.stringify(storagePayload)",
+                            "            }",
+                            "        }, function (err, res) {",
+                            "            pm.test(`[Softeng Grading Service]: Stored response for ${requestPath} successfully.`, function () {",
+                            "                pm.expect(res.code).to.equal(200);",
+                            "            });",
+                            "        });",
+                            "    });"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwt}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "X-OBSERVATORY-AUTH",
+                        "value": "{{jwt}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}//chargesBy/NO/20220714/20220725",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "",
+                        "chargesBy",
+                        "NO",
+                        "20220714",
+                        "20220725"
+                    ]
+                }
+            },
+            "response": []
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "softeng-grading-service",
+            "value": "https://galileo.softlab.ntua.gr/api-grading",
+            "type": "default"
+        },
+        {
+            "key": "jwt",
+            "value": ""
+        },
+        {
+            "key": "username",
+            "value": "\"YOUR-NTUA-USERNAME\"",
+            "type": "default"
+        },
+        {
+            "key": "password",
+            "value": "\"YOUR-NTUA-PASSWORD\"",
+            "type": "default"
+        },
+        {
+            "key": "your-api-username",
+            "value": "\"YOUR-API-USERNAME\"",
+            "type": "default"
+        },
+        {
+            "key": "your-api-password",
+            "value": "\"YOUR-API-PASSWORD\"",
+            "type": "default"
+        },
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:3000",
+            "type": "string"
+        }
+    ]
+}

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Add New Pass</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 350px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+        .success-message {
+            color: green;
+            margin-top: 10px;
+        }
+        table {
+            width: 80%;
+            margin-top: 30px;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <div class="choice-container">
+            <div class="logo-container">
+                <img src="logo.png" alt="Company Logo">
+            </div>
+        <h2>Upload Passes (CSV)</h2>
+        <form id="upload-form">
+            <input type="file" id="fileInput" accept=".csv" required>
+            <button type="button" onclick="uploadFile()">Upload Passes</button>
+        </form>
+        <div id="error-message" class="error-message"></div>
+        <div id="success-message" class="success-message"></div>
+        <button id="backButton" onclick="window.location.href='choice.html'">Back to Select Report</button>
+    </div>
+
+    
+
+    <script>
+      
+        function uploadFile() {
+            const fileInput = document.getElementById("fileInput");
+            const errorMessage = document.getElementById("error-message");
+            const successMessage = document.getElementById("success-message");
+            errorMessage.textContent = "";
+            successMessage.textContent = "";
+
+            if (fileInput.files.length === 0) {
+                errorMessage.textContent = "Please select a CSV file.";
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append("file", file);
+
+            fetch("https://127.0.0.1:9115/admin/addpasses", {
+                method: "POST",
+                headers: {
+                    "X-OBSERVATORY-AUTH": localStorage.getItem("token")
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "OK") {
+                    successMessage.textContent = "CSV uploaded successfully!";
+                    fileInput.value = "";
+                    loadPasses(); 
+                } else {
+                    errorMessage.textContent = "Error uploading CSV: " + data.info;
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                errorMessage.textContent = "There was an error. Please try again.";
+            });
+        }
+
+        window.onload = loadPasses;
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+
+    <title>Toll Report & Add Pass</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .report-container, .form-container {
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 80%;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        input, select, button {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+        .success-message {
+            color: green;
+            margin-top: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        #backButton {
+            background-color: #f44336;
+        }
+        #backButton:hover {
+            background-color: #e53935;
+        }
+    </style>
+</head>
+<body>
+
+  
+    <div class="report-container">
+        <div class="logo-container">
+            <img src="logo.png" alt="Company Logo">
+        </div>
+        <h2>Toll Report</h2>
+
+        <label for="tollSelect">Select Toll:</label>
+        <select id="tollSelect">
+            <option value="">-- Select Toll --</option>
+        </select>
+
+        <input type="date" id="startDate" placeholder="Start Date">
+        <input type="date" id="endDate" placeholder="End Date">
+        <button onclick="fetchTollReport()">Get Report</button>
+
+        <table id="tollReportTable">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Pass Type</th>
+                    <th>Charge (€)</th>
+                </tr>
+            </thead>
+            <tbody>
+              
+            </tbody>
+        </table>
+    </div>
+
+   
+    <div class="form-container">
+        <h2>Upload Passes (CSV)</h2>
+        <form id="upload-form">
+            <input type="file" id="fileInput" accept=".csv" required>
+            <button type="button" onclick="uploadFile()">Upload Passes</button>
+        </form>
+        <div id="error-message" class="error-message"></div>
+        <div id="success-message" class="success-message"></div>
+    </div>
+
+    <button id="backButton" onclick="window.location.href='choice.html'">Back to Select Report</button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            loadTolls();
+        });
+
+        // Load tolls from backend API
+        function loadTolls() {
+            fetch("https://127.0.0.1:9115/tolls", { headers: { "X-OBSERVATORY-AUTH": localStorage.getItem("token") } })
+                .then(response => response.json())
+                .then(data => {
+                    const tollSelect = document.getElementById("tollSelect");
+                    tollSelect.innerHTML = '<option value="">-- Select Toll --</option>'; // Reset dropdown
+                    
+                    data.tolls.forEach(toll => {
+                        const option = document.createElement("option");
+                        option.value = toll.idToll;
+                        option.textContent = toll.Name;
+                        tollSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error("Error fetching tolls:", error));
+        }
+
+        // Fetch the toll report based on selected criteria (Toll ID and Date Range)
+        async function fetchTollReport() {
+            const tollId = document.getElementById("tollSelect").value;
+            const startDate = document.getElementById('startDate').value.replace(/-/g, "");
+            const endDate = document.getElementById('endDate').value.replace(/-/g, "");
+            const token = localStorage.getItem("token");
+
+            if (!startDate || !endDate || !tollId) {
+                alert("Please select a Toll and both start and end dates.");
+                return;
+            }
+
+            const url = `https://127.0.0.1:9115/tollStationPasses/${tollId}/${startDate}/${endDate}`;
+
+            try {
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-OBSERVATORY-AUTH": token
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const tollReportTable = document.getElementById("tollReportTable").getElementsByTagName('tbody')[0];
+                tollReportTable.innerHTML = '';
+
+                if (!data[0]?.passList || data[0].passList.length === 0) {
+                    alert("No toll passes found for the selected period.");
+                    return;
+                }
+
+                data[0].passList.forEach(pass => {
+                    const row = tollReportTable.insertRow();
+                    row.insertCell(0).textContent = pass.timestamp;
+                    row.insertCell(1).textContent = pass.passType;
+                    row.insertCell(2).textContent = pass.passCharge.toFixed(2) + " €";
+                });
+
+            } catch (error) {
+                console.error("Error fetching toll report:", error);
+                alert("Error fetching toll report data.");
+            }
+        }
+
+        // Upload CSV file for passes
+        function uploadFile() {
+            const fileInput = document.getElementById("fileInput");
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            fetch("https://127.0.0.1:9115/admin/addpasses", {
+                method: "POST",
+                headers: { "X-OBSERVATORY-AUTH": localStorage.getItem("token") },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "OK") {
+                    document.getElementById("success-message").textContent = "CSV uploaded successfully!";
+                    fileInput.value = "";
+                    fetchTollReport();
+                } else {
+                    document.getElementById("error-message").textContent = "Error uploading CSV: " + data.info;
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+    <title>Operator Toll Passes Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f9f9f9;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-container img {
+            max-width: 150px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        input, select, button {
+            padding: 10px;
+            margin: 10px 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        canvas {
+            max-width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            background-color: #f44336;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            background-color: #e53935;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="logo-container">
+            <img src="logo.png" alt="Company Logo">
+        </div>
+        
+        <h1>Operator Toll Passes Data</h1>
+
+        <!-- Operator selection -->
+        <label for="operatorSelect">Select Operator:</label>
+        <select id="operatorSelect">
+            <option value="">-- Select Operator --</option>
+        </select>
+
+        <button onclick="fetchOperatorData()">Get Data</button>
+
+        <div id="error-message" class="error-message"></div>
+
+        <!-- Table for displaying operator pass count -->
+        <h2>Operator Passes Summary</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Operator ID</th>
+                    <th>Total Passes</th>
+                </tr>
+            </thead>
+            <tbody id="operatorTableBody">
+                <!-- Operator pass count data will be inserted here dynamically -->
+            </tbody>
+        </table>
+
+        <!-- Histogram Section -->
+        <h2>Passes Distribution Across Operators</h2>
+        <canvas id="operatorHistogram"></canvas>
+
+        <button id="backButton" onclick="window.location.href='choice.html'">Back to Select Report</button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            loadOperators();
+            fetchOperatorPassesHistogram();
+        });
+
+        function loadOperators() {
+            fetch("https://127.0.0.1:9115/operators", {
+                headers: { "X-OBSERVATORY-AUTH": localStorage.getItem("token") }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const operatorSelect = document.getElementById("operatorSelect");
+                operatorSelect.innerHTML = '<option value="">-- Select Operator --</option>'; 
+
+                data.operators.forEach(operator => {
+                    const option = document.createElement("option");
+                    option.value = operator.idOperator;
+                    option.textContent = operator.Name;
+                    operatorSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error("Error fetching operators:", error));
+        }
+
+        async function fetchOperatorData() {
+            const operatorID = document.getElementById("operatorSelect").value;
+            const errorMessage = document.getElementById("error-message");
+            errorMessage.textContent = "";
+
+            if (!operatorID) {
+                errorMessage.textContent = "Please select an Operator";
+                return;
+            }
+
+            const url = `https://127.0.0.1:9115/operatorPassesCount/${operatorID}`;
+            const token = localStorage.getItem("token");
+
+            try {
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-OBSERVATORY-AUTH": token
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const tableBody = document.getElementById("operatorTableBody");
+                tableBody.innerHTML = ''; // Clear previous data
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${data.operatorID}</td>
+                    <td>${data.totalPasses}</td>
+                `;
+                tableBody.appendChild(row);
+
+            } catch (error) {
+                console.error("Error fetching operator data:", error);
+                errorMessage.textContent = "Error fetching data. Please check the console.";
+            }
+        }
+
+        async function fetchOperatorPassesHistogram() {
+            const url = "https://127.0.0.1:9115/operator_passes_histogram";
+            const token = localStorage.getItem("token");
+
+            try {
+                const response = await fetch(url, {
+                    headers: { "X-OBSERVATORY-AUTH": token }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                if (data.length === 0) {
+                    alert("No pass data available.");
+                    return;
+                }
+
+                renderHistogram(data);
+
+            } catch (error) {
+                console.error("Error fetching operator pass data:", error);
+                alert("Error loading data. Check the console for details.");
+            }
+        }
+
+        function renderHistogram(data) {
+            const ctx = document.getElementById('operatorHistogram').getContext('2d');
+
+            const operatorNames = data.map(op => op.operatorID);
+            const passCounts = data.map(op => op.totalPasses);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: operatorNames,
+                    datasets: [{
+                        label: 'Total Passes',
+                        data: passCounts,
+                        backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tag Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .report-container {
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 80%;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #backButton {
+            background-color: #f44336;
+        }
+        #backButton:hover {
+            background-color: #e53935;
+        }
+    </style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tag Report</title>
+    <style>
+        /* Similar styles as the toll report page */
+    </style>
+</head>
+<body>
+
+    <div class="report-container">
+        <h2>Tag Report</h2>
+        
+        <!-- Date range selection -->
+        <input type="date" id="startDate" placeholder="Start Date">
+        <input type="date" id="endDate" placeholder="End Date">
+        <button onclick="fetchTagReport()">Get Report</button>
+
+        <table id="tagReportTable">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Tag Name</th>
+                    <th>Toll Station</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be inserted here dynamically -->
+            </tbody>
+        </table>
+
+        <button id="backButton" onclick="window.location.href='choice.html'">Back to Select Report</button>
+    </div>
+
+    <script>
+        function fetchTagReport() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const userRole = localStorage.getItem("userRole");
+
+            if (!startDate || !endDate) {
+                alert("Please select both start and end dates.");
+                return;
+            }
+
+            const url = `http://127.0.0.1:5000/tag_report?startDate=${startDate}&endDate=${endDate}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const tagReportTable = document.getElementById("tagReportTable").getElementsByTagName('tbody')[0];
+                    tagReportTable.innerHTML = ''; // Clear the table before adding new rows
+                    data.tags.forEach(tag => {
+                        const row = tagReportTable.insertRow();
+                        row.insertCell(0).textContent = tag.time;
+                        row.insertCell(1).textContent = tag.tagName;
+                        if (userRole === 'admin') {
+                            row.insertCell(2).textContent = tag.tollStation; // Show toll station if admin
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Error fetching tag report data.");
+                });
+        }
+    </script>
+
+</body>
+</html>

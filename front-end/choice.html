@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Choice Screen</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .choice-container {
+            background-color: white;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            width: 350px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            margin: 10px 0;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            background-color: #4CAF50;
+            color: white;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    
+
+    <div class="choice-container">
+        <div class="logo-container">
+            <img src="logo.png" alt="Company Logo">
+        </div>
+        
+        <h2>Welcome</h2>
+        <p>Select a report to view:</p>
+        
+        <button onclick="goToTollReport()">View Toll Report</button>
+        <button onclick="goToOperators()">View Operators Report</button>
+        <button onclick="goToOperatorDebt()">View Debts Report</button>
+        <button onclick="goToNewEntry()">New Entry</button>
+        
+        <div id="error-message" class="error-message"></div>
+    </div>
+
+    <script>
+        function goToTollReport() {
+            window.location.href = "toll_report.html";
+        }
+
+        function goToOperators() {
+            window.location.href = "operators.html";
+        }
+
+        function goToOperatorDebt() {
+            window.location.href = "operator_debt.html";
+        }
+
+        function goToNewEntry() {
+            window.location.href = "add_pass.html";
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Operator Debt Overview</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f9f9f9;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        select, button {
+            padding: 10px;
+            margin: 10px 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="logo-container">
+            <img src="logo.png" alt="Company Logo">
+        </div>
+        
+        <h1>Operator Debt Overview</h1>
+        <label for="operatorSelect">Select Operator:</label>
+        <select id="operatorSelect">
+            <option value="">-- Select Operator --</option>
+        </select>
+        <button onclick="fetchOperatorDebts()">Get Debt Data</button>
+
+        <div id="error-message" class="error-message"></div>
+
+        <!-- Table for displaying debts -->
+        <h2>Net Debt Summary</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Operator A</th>
+                    <th>Operator B</th>
+                    <th>Debt A → B (€)</th>
+                    <th>Debt B → A (€)</th>
+                    <th>Net Debt (€)</th>
+                </tr>
+            </thead>
+            <tbody id="debtTableBody"></tbody>
+        </table>
+    
+        <button id="backButton" onclick="window.location.href='choice.html'">Back to Select Report</button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            loadOperators();
+        });
+    
+        function loadOperators() {
+            fetch("https://127.0.0.1:9115/operators", {
+                headers: { "X-OBSERVATORY-AUTH": localStorage.getItem("token") }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const operatorSelect = document.getElementById("operatorSelect");
+                operatorSelect.innerHTML = '<option value="">-- Select Operator --</option>'; 
+    
+                data.operators.forEach(operator => {
+                    const option = document.createElement("option");
+                    option.value = operator.idOperator;
+                    option.textContent = operator.Name;
+                    operatorSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error("Error fetching operators:", error));
+        }
+    
+        function fetchOperatorDebts() {
+            const operatorID = document.getElementById("operatorSelect").value;
+            const errorMessage = document.getElementById("error-message");
+            errorMessage.textContent = "";
+    
+            if (!operatorID) {
+                errorMessage.textContent = "Please select an Operator.";
+                return;
+            }
+    
+            fetch(`https://127.0.0.1:9115/operatorDebts/${operatorID}`, {
+                headers: { "X-OBSERVATORY-AUTH": localStorage.getItem("token") }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById("debtTableBody");
+                tableBody.innerHTML = "";
+    
+                if (data.length === 0) {
+                    errorMessage.textContent = "No debt data found for the selected operator.";
+                    return;
+                }
+    
+                data.forEach(debt => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${debt.operatorA}</td>
+                        <td>${debt.operatorB}</td>
+                        <td>${debt.debtA_to_B.toFixed(2)} €</td>
+                        <td>${debt.debtB_to_A.toFixed(2)} €</td>
+                        <td>${debt.net_debt.toFixed(2)} €</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error("Error fetching operator debts:", error);
+                errorMessage.textContent = "Error fetching data. Please check the console.";
+            });
+        }
+    </script>
+    
+
+</body>
+</html>

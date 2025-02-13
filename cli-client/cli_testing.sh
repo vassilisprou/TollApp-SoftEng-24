@@ -1,26 +1,35 @@
 #!/bin/bash
 
-echo "Logging in..."
-curl -X POST http://127.0.0.1:9115/login -d "username=admin&password=freepasses4all" -o login_response.json
+echo "Testing CLI commands..."
 
-TOKEN=$(jq -r '.token' login_response.json)
+# Login
+python cli.py login --username admin --password freepasses4all
 
-echo "Checking health status..."
-curl -X GET http://127.0.0.1:9115/admin/healthcheck -H "X-OBSERVATORY-AUTH: $TOKEN"
+# Healthcheck
+python cli.py healthcheck
 
-echo "Resetting stations..."
-curl -X POST http://127.0.0.1:9115/admin/resetstations -H "X-OBSERVATORY-AUTH: $TOKEN"
+# Reset passes
+python cli.py resetpasses
 
-echo "Resetting passes..."
-curl -X POST http://127.0.0.1:9115/admin/resetpasses -H "X-OBSERVATORY-AUTH: $TOKEN"
+# Reset stations
+python cli.py resetstations
 
-echo "Adding passes from CSV..."
-curl -X POST http://127.0.0.1:9115/admin/addpasses -H "X-OBSERVATORY-AUTH: $TOKEN" -F "file=@\"C:\Users\iomak\MySQL\MySQL Server 8.0\Uploads\passes23.csv\""
+# Add passes (Ensure test.csv exists in the directory)
+python cli.py addpasses --file "file=@\"C:\Users\iomak\MySQL\MySQL Server 8.0\Uploads\passes23.csv\""
 
-echo "Getting passes cost..."
-curl -X GET "http://127.0.0.1:9115/passesCost/NAO/EG/20220101/20220131" -H "X-OBSERVATORY-AUTH: $TOKEN"
+# Toll station passes
+python cli.py tollstationpasses --station NAO01 --from 20240101 --to 20240131 --format json
 
-echo "Getting charges by operator..."
-curl -X GET "http://127.0.0.1:9115/chargesBy/NAO/20220101/20220131" -H "X-OBSERVATORY-AUTH: $TOKEN"
+# Pass analysis
+python cli.py passanalysis --stationop NAO --tagop EG --from 20240101 --to 20240131 --format json
 
-echo "Tests completed."
+# Pass cost
+python cli.py passescost --stationop NAO --tagop EG --from 20240101 --to 20240131 --format json
+
+# Charges by operator
+python cli.py chargesby --opid NAO --from 20240101 --to 20240131 --format json
+
+# Logout
+python cli.py logout
+
+echo "CLI tests completed."

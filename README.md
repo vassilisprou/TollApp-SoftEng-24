@@ -16,7 +16,7 @@ We utilized a combination of tools and frameworks to build this system:
 - MySQL – Database management
 - Postman Collections – Automated API testing
 - OpenAPI (YAML) – API documentation
-- ______ – Frontend development (to be specified)
+- Html – Frontend development (to be specified)
 - Github - Version Control
 
 ### Contributors

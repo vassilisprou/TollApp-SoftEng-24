@@ -17,6 +17,7 @@ We utilized a combination of tools and frameworks to build this system:
 - Postman Collections – Automated API testing
 - OpenAPI (YAML) – API documentation
 - ______ – Frontend development (to be specified)
+- Github - Version Control
 
 ### Contributors
 - Χρήστος Αλεξίου
